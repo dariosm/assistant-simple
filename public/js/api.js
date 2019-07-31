@@ -27,11 +27,6 @@ var Api = (function() {
     },
     setResponsePayload: function(newPayloadStr) {
       responsePayload = JSON.parse(newPayloadStr);
-      try {
-        prevSkillContext = responsePayload.context.skills[skillName].user_defined;
-      } catch (typeError){
-        prevSkillContext = null;
-      }
     },
     setErrorPayload: function() {
     }
@@ -73,7 +68,10 @@ var Api = (function() {
     http.setRequestHeader('Content-type', 'application/json');
     http.onreadystatechange = function() {
       if (http.readyState === XMLHttpRequest.DONE && http.status === 200 && http.responseText) {
-        Api.setResponsePayload(http.responseText);
+        // Set both request (filled by the server with additional properties) and response
+        var inOutPayload = JSON.parse(http.responseText);
+        Api.setRequestPayload(JSON.stringify(inOutPayload.input));
+        Api.setResponsePayload(JSON.stringify(inOutPayload.output));
       } else if (http.readyState === XMLHttpRequest.DONE && http.status !== 200) {
         Api.setErrorPayload({
           'output': {
@@ -89,12 +87,6 @@ var Api = (function() {
     };
 
     var params = JSON.stringify(payloadToWatson);
-    // Stored in variable (publicly visible through Api.getRequestPayload)
-    // to be used throughout the application
-    if (Object.getOwnPropertyNames(payloadToWatson).length !== 0) {
-      Api.setRequestPayload(params);
-    }
-
     // Send request
     http.send(params);
   }

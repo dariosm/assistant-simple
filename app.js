@@ -61,7 +61,12 @@ app.post('/api/message', function (req, res) {
       return res.status(status).json(err);
     }
 
-    return res.json(data);
+    var inOutPayload = {
+      input: payload,
+      output: data
+    };
+
+    return res.json(inOutPayload);
   });
 });
 
