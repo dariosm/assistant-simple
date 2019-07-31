@@ -30,7 +30,7 @@ var Api = (function() {
     setResponsePayload: function(newPayloadStr) {
       responsePayload = JSON.parse(newPayloadStr);
       try {
-        mainSkillContext = responsePayload.context.skills['main skill'].user_defined;
+        mainSkillContext = responsePayload.context.skills['orchestrator skill'].user_defined;
       } catch (typeError){
         mainSkillContext = null;
       }
@@ -70,7 +70,7 @@ var Api = (function() {
     };
 
     if (mainSkillContext) {
-      payloadToWatson.context = { 'skills': { 'main skill': { 'user_defined': mainSkillContext}}};
+      payloadToWatson.context = { 'skills': { 'orchestrator skill': { 'user_defined': mainSkillContext}}};
     }
 
     // Built http request
