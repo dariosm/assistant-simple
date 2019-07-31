@@ -28,7 +28,7 @@ var ConversationPanel = (function () {
   function init() {
     chatUpdateSetup();
     Api.getSessionId(function() {
-      Api.sendRequest('', null);
+      Api.sendRequest('');
     });
     setupInputBox();
   }
