@@ -33,9 +33,12 @@ var assistant = new AssistantV2({
   version: '2019-02-28'
 });
 
+var prevSkillContext = JSON.parse(process.env.INITIAL_CONTEXT || '{}');
+var skillName = process.env.SKILL_NAME;
+var assistantId = process.env.ASSISTANT_ID || '<assistant-id>';
+
 // Endpoint to be call from the client side
 app.post('/api/message', function (req, res) {
-  var assistantId = process.env.ASSISTANT_ID || '<assistant-id>';
   if (!assistantId || assistantId === '<assistant-id>') {
     return res.json({
       'output': {
@@ -44,23 +47,12 @@ app.post('/api/message', function (req, res) {
     });
   }
 
-  var textIn = '';
-
-  if(req.body.input) {
-    textIn = req.body.input.text;
+  var payload = req.body;
+  payload.assistant_id = assistantId;
+  if (prevSkillContext) {
+    payload.context = {'skills': {}};
+    payload.context.skills[skillName] = {'user_defined': prevSkillContext};
   }
-
-  var payloadContext = req.body.context || JSON.parse(process.env.INITIAL_CONTEXT || '{}');
-  var payload = {
-    assistant_id: assistantId,
-    session_id: req.body.session_id,
-    input: {
-      message_type : 'text',
-      text : textIn,
-      options: req.body.input.options
-    },
-    context: payloadContext
-  };
 
   // Send the input to the assistant service
   assistant.message(payload, function (err, data) {
@@ -75,7 +67,7 @@ app.post('/api/message', function (req, res) {
 
 app.get('/api/session', function (req, res) {
   assistant.createSession({
-    assistant_id: process.env.ASSISTANT_ID || '{assistant_id}',
+    assistant_id: assistantId,
   }, function (error, response) {
     if (error) {
       return res.send(error);
