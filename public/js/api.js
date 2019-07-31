@@ -9,8 +9,6 @@ var Api = (function() {
 
   var sessionId = null;
 
-  var mainSkillContext = null;
-
   // Publicly accessible methods defined
   return {
     sendRequest: sendRequest,
@@ -30,9 +28,9 @@ var Api = (function() {
     setResponsePayload: function(newPayloadStr) {
       responsePayload = JSON.parse(newPayloadStr);
       try {
-        mainSkillContext = responsePayload.context.skills['orchestrator skill'].user_defined;
+        prevSkillContext = responsePayload.context.skills[skillName].user_defined;
       } catch (typeError){
-        mainSkillContext = null;
+        prevSkillContext = null;
       }
     },
     setErrorPayload: function() {
@@ -68,10 +66,6 @@ var Api = (function() {
         return_context: true
       }
     };
-
-    if (mainSkillContext) {
-      payloadToWatson.context = { 'skills': { 'orchestrator skill': { 'user_defined': mainSkillContext}}};
-    }
 
     // Built http request
     var http = new XMLHttpRequest();
