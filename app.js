@@ -33,7 +33,6 @@ var assistant = new AssistantV2({
   version: '2019-02-28'
 });
 
-
 // Endpoint to be call from the client side
 app.post('/api/message', function (req, res) {
   var assistantId = process.env.ASSISTANT_ID || '<assistant-id>';
@@ -51,13 +50,16 @@ app.post('/api/message', function (req, res) {
     textIn = req.body.input.text;
   }
 
+  var payloadContext = req.body.context || JSON.parse(process.env.INITIAL_CONTEXT || '{}');
   var payload = {
     assistant_id: assistantId,
     session_id: req.body.session_id,
     input: {
       message_type : 'text',
-      text : textIn
-    }
+      text : textIn,
+      options: req.body.input.options
+    },
+    context: payloadContext
   };
 
   // Send the input to the assistant service

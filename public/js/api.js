@@ -9,6 +9,8 @@ var Api = (function() {
 
   var sessionId = null;
 
+  var mainSkillContext = null;
+
   // Publicly accessible methods defined
   return {
     sendRequest: sendRequest,
@@ -27,6 +29,11 @@ var Api = (function() {
     },
     setResponsePayload: function(newPayloadStr) {
       responsePayload = JSON.parse(newPayloadStr);
+      try {
+        mainSkillContext = responsePayload.context.skills['main skill'].user_defined;
+      } catch (typeError){
+        mainSkillContext = null;
+      }
     },
     setErrorPayload: function() {
     }
@@ -57,8 +64,14 @@ var Api = (function() {
     payloadToWatson.input = {
       message_type: 'text',
       text: text,
+      options: {
+        return_context: true
+      }
     };
 
+    if (mainSkillContext) {
+      payloadToWatson.context = { 'skills': { 'main skill': { 'user_defined': mainSkillContext}}};
+    }
 
     // Built http request
     var http = new XMLHttpRequest();
