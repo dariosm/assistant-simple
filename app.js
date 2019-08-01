@@ -33,7 +33,8 @@ var assistant = new AssistantV2({
   version: '2019-02-28'
 });
 
-var prevSkillContext = JSON.parse(process.env.INITIAL_CONTEXT || '{}');
+var initialSkillContext = JSON.parse(process.env.INITIAL_SKILL_CONTEXT || '{}');
+var initialSystemContext = JSON.parse(process.env.INITIAL_SYSTEM_CONTEXT || '{}');
 var skillName = process.env.SKILL_NAME;
 var assistantId = process.env.ASSISTANT_ID || '<assistant-id>';
 
@@ -49,9 +50,16 @@ app.post('/api/message', function (req, res) {
 
   var payload = req.body;
   payload.assistant_id = assistantId;
-  if (prevSkillContext) {
-    payload.context = {'skills': {}};
-    payload.context.skills[skillName] = {'user_defined': prevSkillContext};
+
+  // Setup initial context only in the first message
+  if (payload.input.text == '') {
+    payload.context = { 
+      global: {
+        system: initialSystemContext
+      },
+      skills: {}
+    };
+    payload.context.skills[skillName] = {'user_defined': initialSkillContext};
   }
 
   // Send the input to the assistant service
