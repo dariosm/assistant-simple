@@ -47,8 +47,8 @@ var PayloadPanel = (function() {
   // This causes the displayPayload function to be called when messages are sent / received
   function payloadUpdateSetup() {
     var currentRequestPayloadSetter = Api.setRequestPayload;
-    Api.setRequestPayload = function(newPayloadStr) {
-      currentRequestPayloadSetter.call(Api, newPayloadStr);
+    Api.setRequestPayload = function(newPayload) {
+      currentRequestPayloadSetter.call(Api, newPayload);
       displayPayload(settings.payloadTypes.request);
     };
 

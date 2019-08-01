@@ -19,14 +19,14 @@ var Api = (function() {
     getRequestPayload: function() {
       return requestPayload;
     },
-    setRequestPayload: function(newPayloadStr) {
-      requestPayload = JSON.parse(newPayloadStr);
+    setRequestPayload: function(newPayload) {
+      requestPayload = newPayload;
     },
     getResponsePayload: function() {
       return responsePayload;
     },
-    setResponsePayload: function(newPayloadStr) {
-      responsePayload = JSON.parse(newPayloadStr);
+    setResponsePayload: function(newPayload) {
+      responsePayload = newPayload;
     },
     setErrorPayload: function() {
     }
@@ -70,8 +70,8 @@ var Api = (function() {
       if (http.readyState === XMLHttpRequest.DONE && http.status === 200 && http.responseText) {
         // Set both request (filled by the server with additional properties) and response
         var inOutPayload = JSON.parse(http.responseText);
-        Api.setRequestPayload(JSON.stringify(inOutPayload.input));
-        Api.setResponsePayload(JSON.stringify(inOutPayload.output));
+        Api.setRequestPayload(inOutPayload.input);
+        Api.setResponsePayload(inOutPayload.output);
       } else if (http.readyState === XMLHttpRequest.DONE && http.status !== 200) {
         Api.setErrorPayload({
           'output': {

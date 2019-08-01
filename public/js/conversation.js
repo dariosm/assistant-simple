@@ -36,15 +36,15 @@ var ConversationPanel = (function () {
   // This causes the displayMessage function to be called when messages are sent / received
   function chatUpdateSetup() {
     var currentRequestPayloadSetter = Api.setRequestPayload;
-    Api.setRequestPayload = function (newPayloadStr) {
-      currentRequestPayloadSetter.call(Api, newPayloadStr);
-      displayMessage(JSON.parse(newPayloadStr), settings.authorTypes.user);
+    Api.setRequestPayload = function (newPayload) {
+      currentRequestPayloadSetter.call(Api, newPayload);
+      displayMessage(newPayload, settings.authorTypes.user);
     };
 
     var currentResponsePayloadSetter = Api.setResponsePayload;
-    Api.setResponsePayload = function (newPayloadStr) {
-      currentResponsePayloadSetter.call(Api, newPayloadStr);
-      displayMessage(JSON.parse(newPayloadStr), settings.authorTypes.watson);
+    Api.setResponsePayload = function (newPayload) {
+      currentResponsePayloadSetter.call(Api, newPayload);
+      displayMessage(newPayload, settings.authorTypes.watson);
     };
 
     Api.setErrorPayload = function (newPayload) {
