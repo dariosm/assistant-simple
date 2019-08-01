@@ -62,6 +62,8 @@ var Api = (function() {
       }
     };
 
+    Api.setRequestPayload(payloadToWatson);
+
     // Built http request
     var http = new XMLHttpRequest();
     http.open('POST', messageEndpoint, true);
@@ -70,7 +72,7 @@ var Api = (function() {
       if (http.readyState === XMLHttpRequest.DONE && http.status === 200 && http.responseText) {
         // Set both request (filled by the server with additional properties) and response
         var inOutPayload = JSON.parse(http.responseText);
-        Api.setRequestPayload(inOutPayload.input);
+        // TODO: update input payload on the right panel with the actual payload sent to watson: inOutPayload.input
         Api.setResponsePayload(inOutPayload.output);
       } else if (http.readyState === XMLHttpRequest.DONE && http.status !== 200) {
         Api.setErrorPayload({
