@@ -299,9 +299,9 @@ var ConversationPanel = (function () {
         responses.push({
           type: 'text',
           innerhtml: resp.data.text,
-          disambiguate: resp.disambiguate ? true : false,
+          disambiguate: resp.data.disambiguate ? true : false,
           disambiguation_text: resp.data.skillCode + ' - ' + resp.data.skillCase,
-          classList: resp.disambiguate ? 'collapsed' : 'not-collapsed'
+          classList: resp.data.disambiguate ? 'collapsed' : 'not-collapsed'
         });
       });
     } /*else if (gen.response_type === 'text') {
