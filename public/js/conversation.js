@@ -166,31 +166,77 @@ var ConversationPanel = (function () {
         }, res.time);
       }
     }
+    var acc = document.querySelectorAll(".accordion-header"); 
+    if (acc.length) {
+      acc.forEach(function (elem){
+        if (elem.getAttribute('listener') !== 'true') {
+          elem.addEventListener('click', expandResponse.bind(this));
+          elem.setAttribute('listener', 'true');
+        }
+      });
+    }
+  }
+
+  function expandResponse(event) {
+    console.log(event);
+    var body = event.target.querySelector(".accordion-body");
+    body.classList.toggle("hidden");
+
   }
 
   // Constructs new DOM element from a message
   function getDivObject(res, isUser, isTop) {
-    var classes = [(isUser ? 'from-user' : 'from-watson'), 'latest', (isTop ? 'top' : 'sub')];
-    var messageJson = {
-      // <div class='segments'>
-      'tagName': 'div',
-      'classNames': ['segments'],
-      'children': [{
-        // <div class='from-user/from-watson latest'>
+    var classes = [(isUser ? 'from-user' : 'from-watson'), 'latest', (isTop ? 'top' : 'sub'), res.classList];
+    if (res.disambiguate) {
+      var messageJson = {
+        // <div class='segments'>
         'tagName': 'div',
-        'classNames': classes,
+        'classNames': ['segments', 'accordion'],
         'children': [{
-          // <div class='message-inner'>
+          // <div class='from-user/from-watson latest'>
           'tagName': 'div',
-          'classNames': ['message-inner'],
+          'classNames': classes,
           'children': [{
-            // <p>{messageText}</p>
-            'tagName': 'p',
-            'text': res.innerhtml
+            // <div class='message-inner'>
+            'tagName': 'div',
+            'classNames': ['message-inner'],
+            'children': [{
+              // <p>{messageText}</p>
+              'tagName': 'div',
+              'classNames': ['accordion-header'],
+              'text': res.disambiguation_text,
+              'children': [{
+                // <p>{messageText}</p>
+                'tagName': 'div',
+                'classNames': ['accordion-body', 'hidden'],
+                'text': res.innerhtml
+              }]
+            }]
           }]
         }]
-      }]
-    };
+      };
+    } else {
+      var messageJson = {
+        // <div class='segments'>
+        'tagName': 'div',
+        'classNames': ['segments'],
+        'children': [{
+          // <div class='from-user/from-watson latest'>
+          'tagName': 'div',
+          'classNames': classes,
+          'children': [{
+            // <div class='message-inner'>
+            'tagName': 'div',
+            'classNames': ['message-inner'],
+            'children': [{
+              // <p>{messageText}</p>
+              'tagName': 'p',
+              'text': res.innerhtml
+            }]
+          }]
+        }]
+      };
+    }
     return Common.buildDomElement(messageJson);
   }
 
@@ -247,12 +293,23 @@ var ConversationPanel = (function () {
         type: gen.response_type,
         innerhtml: title + description + img
       });
-    } else if (gen.response_type === 'text') {
+    } else if (gen.response_type === 'object') {
+      var values = gen.value;
+      values.forEach(function (resp) {
+        responses.push({
+          type: 'text',
+          innerhtml: resp.data.text,
+          disambiguate: resp.disambiguate ? true : false,
+          disambiguation_text: resp.data.skillCode + ' - ' + resp.data.skillCase,
+          classList: resp.disambiguate ? 'collapsed' : 'not-collapsed'
+        });
+      });
+    } /*else if (gen.response_type === 'text') {
       responses.push({
         type: gen.response_type,
         innerhtml: gen.text
       });
-    } else if (gen.response_type === 'pause') {
+    }*/ else if (gen.response_type === 'pause') {
       responses.push({
         type: gen.response_type,
         time: gen.time,

@@ -79,8 +79,7 @@ div {
   padding: 0.9375rem 0 0.625rem 0;
   margin: auto;
   text-align: left;
-  max-width: 25rem;
-  min-width: 9.375rem;
+  width: 50%;
 }
 
 .user-typing {
@@ -204,6 +203,20 @@ div {
   height: 1.3125rem;
   line-height: 1.3125rem;
 }
+
+.from-watson p:before {
+  content: ".";
+  color: #9855D4;
+  background-image: url("../img/marker_image.png");
+  background-size: 0.3125rem 1.3125rem;
+  position: absolute;
+  z-index: 2;
+  left: 0.4375rem;
+  width: 0.3125rem;
+  height: 1.3125rem;
+  line-height: 1.3125rem;
+}
+
 
 #textInput {
   border: none;
@@ -463,4 +476,25 @@ html{
   margin: 3px;
   cursor: pointer;
   display: inline-block;
+}
+
+
+
+
+.accordion-header {
+  background-color: #ead5fd;
+  cursor: pointer;
+  padding:15px;
+  border-radius: 1.25rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.accordion-body {
+  background-color: #fff;
+  padding:15px;
+  border-radius: 10px;
+  margin-top: 10px;
 }
