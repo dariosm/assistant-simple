@@ -300,8 +300,8 @@ var ConversationPanel = (function () {
           type: 'text',
           innerhtml: resp.data.text,
           disambiguate: resp.data.disambiguate ? true : false,
-          disambiguation_text: `[${resp.data.disambiguate_group_id}] ${resp.data.skillCode} - ${resp.data.skillCase}`,
-          classList: [resp.data.disambiguate ? 'collapsed' : 'not-collapsed', 'disambiguation-color-'+resp.data.disambiguate_group_id]
+          disambiguation_text: `${resp.data.skillCode} - ${resp.data.skillCase}`,
+          classList: [resp.data.disambiguate ? 'collapsed' : 'not-collapsed', `disambiguation-color-${resp.data.disambiguate_group_id}`]
         });
       });
     } /*else if (gen.response_type === 'text') {
