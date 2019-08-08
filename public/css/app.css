@@ -498,3 +498,17 @@ html{
   border-radius: 10px;
   margin-top: 10px;
 }
+
+
+.disambiguation-color-0 .accordion-header {
+  background-color: #ead5fd;
+}
+.disambiguation-color-1 .accordion-header {
+  background-color: #cbdef4;
+}
+.disambiguation-color-2 .accordion-header {
+  background-color: #e3f7c8;
+}
+.disambiguation-color-3 .accordion-header {
+  background-color: #f7ddd9;
+}

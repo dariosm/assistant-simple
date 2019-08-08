@@ -186,7 +186,7 @@ var ConversationPanel = (function () {
 
   // Constructs new DOM element from a message
   function getDivObject(res, isUser, isTop) {
-    var classes = [(isUser ? 'from-user' : 'from-watson'), 'latest', (isTop ? 'top' : 'sub'), res.classList];
+    var classes = [(isUser ? 'from-user' : 'from-watson'), 'latest', (isTop ? 'top' : 'sub')].concat(res.classList);
     if (res.disambiguate) {
       var messageJson = {
         // <div class='segments'>
@@ -301,7 +301,7 @@ var ConversationPanel = (function () {
           innerhtml: resp.data.text,
           disambiguate: resp.data.disambiguate ? true : false,
           disambiguation_text: `[${resp.data.disambiguate_group_id}] ${resp.data.skillCode} - ${resp.data.skillCase}`,
-          classList: resp.data.disambiguate ? 'collapsed' : 'not-collapsed'
+          classList: [resp.data.disambiguate ? 'collapsed' : 'not-collapsed', 'disambiguation-color-'+resp.data.disambiguate_group_id]
         });
       });
     } /*else if (gen.response_type === 'text') {
